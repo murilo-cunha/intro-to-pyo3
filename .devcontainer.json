@@ -1,0 +1,23 @@
+// Dev Container configuration.
+{
+  "name": "intro-to-pyo3",
+  "build": {
+    "context": ".",
+    "dockerfile": "./Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // Python
+        "ms-python.python",
+		"charliermarsh.ruff",
+        // Rust
+        "vadimcn.vscode-lldb",
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "serayuzgur.crates"
+      ]
+    }
+  },
+  "remoteUser": "devcontainer"
+}

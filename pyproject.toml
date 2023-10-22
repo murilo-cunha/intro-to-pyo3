@@ -1,0 +1,32 @@
+[project]
+name = "intro-to-pyo3"
+version = "0.1.0"
+description = "Calling Rust from Python: A Gentle Introduction to PyO3"
+authors = [
+    {name = "Murilo Cunha", email = "murilo.kuniyoshi@hotmail.com"},
+]
+dependencies = [
+    "maturin>=1.3.0",
+    "numpy>=1.26.0",
+]
+requires-python = ">=3.12,<3.13"
+readme = "README.md"
+license = {text = "MIT"}
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pre-commit>=3.5.0",
+]
+
+[tool.pdm.scripts]
+lint = "pre-commit run --hook-stage pre-push --all-files"
+
+[tool.ruff]
+fix            = true
+force-exclude  = true
+ignore         = ["EM", "D203", "D212"]
+select         = ["ALL"]
+target-version = "py312"
+
+[tool.ruff.per-file-ignores]
+"scripts/*" = ["INP001"]
