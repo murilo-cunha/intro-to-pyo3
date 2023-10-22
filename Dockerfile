@@ -5,7 +5,8 @@ RUN apt-get -qq update
 # Get required packages
 RUN apt-get install -y -q \
     build-essential \
-    curl
+    curl \
+    git
 
 # Install Rust and make it available in the PATH
 RUN curl -sSf https://sh.rustup.rs | sh -s -- -y
