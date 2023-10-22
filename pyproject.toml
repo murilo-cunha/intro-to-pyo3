@@ -1,22 +1,27 @@
 [project]
-name = "intro-to-pyo3"
-version = "0.1.0"
-description = "Calling Rust from Python: A Gentle Introduction to PyO3"
-authors = [
-    {name = "Murilo Cunha", email = "murilo.kuniyoshi@hotmail.com"},
-]
+authors = [{name = "Murilo Cunha", email = "murilo.kuniyoshi@hotmail.com"}]
 dependencies = [
     "maturin>=1.3.0",
     "numpy>=1.26.0",
+    "imageio>=2.31.5",
+    "matplotlib>=3.8.0",
 ]
-requires-python = ">=3.12,<3.13"
-readme = "README.md"
+description = "Calling Rust from Python: A Gentle Introduction to PyO3"
+dynamic = ["version"]
 license = {text = "MIT"}
+name = "sobel-py"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+
+[build-system]
+build-backend = "pdm.backend"
+requires      = ["pdm-backend"]
+
+[tool.pdm]
+version = {source = "file", path = "sobel_py/__init__.py"}
 
 [tool.pdm.dev-dependencies]
-dev = [
-    "pre-commit>=3.5.0",
-]
+dev = ["pre-commit>=3.5.0"]
 
 [tool.pdm.scripts]
 lint = "pre-commit run --hook-stage pre-push --all-files"
@@ -24,7 +29,7 @@ lint = "pre-commit run --hook-stage pre-push --all-files"
 [tool.ruff]
 fix            = true
 force-exclude  = true
-ignore         = ["EM", "D203", "D212"]
+ignore         = ["ANN401", "EM", "D203", "D212"]
 select         = ["ALL"]
 target-version = "py312"
 

@@ -2,25 +2,25 @@ default_install_hook_types: [pre-commit, pre-push]
 
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
-      rev: v3.2.0
+      rev: v4.5.0
       hooks:
           - id: trailing-whitespace
           - id: end-of-file-fixer
     - repo: https://github.com/psf/black
-      rev: 22.3.0
+      rev: 23.10.0
       hooks:
           - id: black
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.0.292
+      rev: v0.1.1
       hooks:
           - id: ruff
     - repo: https://github.com/pre-commit/mirrors-mypy
-      rev: v0.942
+      rev: v1.6.1
       hooks:
           - id: mypy
             additional_dependencies: ['types-requests']
     - repo: https://github.com/pdm-project/pdm
-      rev: 2.8.1
+      rev: 2.9.3
       hooks:
           - id: pdm-export
             stages: [pre-push]
