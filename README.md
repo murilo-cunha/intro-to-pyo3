@@ -20,3 +20,13 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
+
+
+### PDM
+
+If you are using [PDM](https://pdm.fming.dev/latest/), make sure to include `pip` in your virtual environment.
+
+```bash
+pdm install
+pdm run python -m ensurepip
+```
