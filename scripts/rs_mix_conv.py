@@ -29,7 +29,6 @@ def sobel(filepath: Path) -> None:
     for i, sobel in enumerate(sobel_arrs):
         _sobel = sobel / sobel.max()
         out_img[..., i] += (_sobel * 255).astype(np.uint8)
-    print(out_img[300:450, 200:400, :])
     sidebyside(img_gray, out_img)
     plt.show()
 
