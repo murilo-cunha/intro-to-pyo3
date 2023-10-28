@@ -59,15 +59,38 @@ fn sobel_rs(_py: Python, m: &PyModule) -> PyResult<()> {
 
     /// 2D convolution of an image (stride is 1).
     #[pyfn(m)]
-    fn convolution2d(image: Matrix, kernel: Matrix, padding: Option<f32>) -> PyResult<()> {
+    fn convolution2d(image: Matrix, kernel: Matrix, padding: Option<f32>) -> PyResult<Matrix> {
         // Convert to ndarray
         let img = image.to_ndarray().map_err(|e| {
             PyValueError::new_err(
                 "Error converting `Matrix` to `Array2`: ".to_owned() + &e.to_string().to_owned(),
             )
         })?;
-        println!("from rust {img:?}");
-        Ok(())
+        let k = kernel.to_ndarray().map_err(|e| {
+            PyValueError::new_err(
+                "Error converting `Matrix` to `Array2`: ".to_owned() + &e.to_string().to_owned(),
+            )
+        })?;
+
+        // Checks
+        if img.ndim() != 2 {
+            return Err(PyValueError::new_err("Image must be 2D"));
+        }
+        let (kernel_y, kernel_x) = k.dim();
+        if kernel_y != kernel_x {
+            return Err(PyValueError::new_err("Kernel must be square"));
+        }
+
+        // Convolution
+        let padded_img = pad_with_zeros(&img, padding.unwrap_or(0.) as usize);
+        let mut out_img: Array2<f32> = ndarray::Array2::zeros(padded_img.dim());
+        let (img_y, img_x) = img.dim();
+        for i in 0..(img_y - kernel_y + 1) {
+            for j in 0..(img_x - kernel_x + 1) {
+                out_img[[i, j]] = (&img.slice(s![i..i + kernel_y, j..j + kernel_x]) * &k).sum();
+            }
+        }
+        Ok(out_img.into())
     }
 
     m.add_class::<Matrix>()?;
