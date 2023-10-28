@@ -16,6 +16,7 @@ requires-python = ">=3.12,<3.13"
 [project.optional-dependencies]
 nb = [
     "ipykernel>=6.26.0",
+    "pygments>=2.16.1",
 ]
 [build-system]
 build-backend = "pdm.backend"
