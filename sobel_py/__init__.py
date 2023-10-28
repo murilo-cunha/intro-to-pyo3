@@ -62,5 +62,5 @@ def convolution2d(
     img_y, img_x = image.shape
     for i in range(img_y - kernel_y + 1):
         for j in range(img_x - kernel_y + 1):
-            out_img[i][j] = np.sum(image[i : i + kernel_y, j : j + kernel_y] * kernel)
+            out_img[i, j] = np.sum(image[i : i + kernel_y, j : j + kernel_y] * kernel)
     return out_img.astype(np.uint8)
