@@ -17,6 +17,8 @@ requires-python = ">=3.12,<3.13"
 nb = [
     "ipykernel>=6.26.0",
     "pygments>=2.16.1",
+    "jupyterlab>=4.0.7",
+    "jupyterlab-rise>=0.41.0",
 ]
 [build-system]
 build-backend = "pdm.backend"
