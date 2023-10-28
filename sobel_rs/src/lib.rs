@@ -59,14 +59,14 @@ fn sobel_rs(_py: Python, m: &PyModule) -> PyResult<()> {
 
     /// 2D convolution of an image (stride is 1).
     #[pyfn(m)]
-    fn convolution2d(image: Matrix, kernel: Matrix, padding: Option<f32>) -> PyResult<Matrix> {
+    fn convolution2d(image: Matrix, kernel: Matrix, padding: Option<f32>) -> PyResult<()> {
         // Convert to ndarray
         let img = image.to_ndarray().map_err(|e| {
             PyValueError::new_err(
                 "Error converting `Matrix` to `Array2`: ".to_owned() + &e.to_string().to_owned(),
             )
         })?;
-        println!("from rust {arr:?}");
+        println!("from rust {img:?}");
         Ok(())
     }
 
@@ -80,7 +80,7 @@ mod tests {
 
     #[test]
     fn test_pad_with_zeros() {
-        let input_img = ndarray::arr2(&[[1, 2], [3, 4]]);
+        let input_img = ndarray::arr2(&[[1, 2], [3, 4]]).mapv(|x| x as f32);
         let expected_img = ndarray::arr2(&[
             [0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0],
@@ -88,7 +88,8 @@ mod tests {
             [0, 0, 3, 4, 0, 0],
             [0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0],
-        ]);
+        ])
+        .mapv(|x| x as f32);
         assert_eq!(pad_with_zeros(&input_img, 2), expected_img);
     }
 }
