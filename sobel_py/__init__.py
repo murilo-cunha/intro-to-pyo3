@@ -1,8 +1,6 @@
 """Apply filters to images."""
-from pathlib import Path
 from typing import Any
 
-import imageio.v3 as iio
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
@@ -21,7 +19,11 @@ def show_rgba(im: np.ndarray, **subplots_kwargs: Any) -> tuple[Figure, Any]:
     return fig, axs
 
 
-def sidebyside(img_left: np.ndarray, img_right: np.ndarray, **subplots_kwargs: Any):
+def sidebyside(
+    img_left: np.ndarray,
+    img_right: np.ndarray,
+    **subplots_kwargs: Any,
+) -> tuple[Figure, Any]:
     """Show two images side by side."""
     fig, axs = plt.subplots(1, 2, **subplots_kwargs)
     axs[0].imshow(img_left)
