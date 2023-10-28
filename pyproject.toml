@@ -13,6 +13,10 @@ name = "sobel-py"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 
+[project.optional-dependencies]
+nb = [
+    "ipykernel>=6.26.0",
+]
 [build-system]
 build-backend = "pdm.backend"
 requires      = ["pdm-backend"]
@@ -21,7 +25,9 @@ requires      = ["pdm-backend"]
 version = {source = "file", path = "sobel_py/__init__.py"}
 
 [tool.pdm.dev-dependencies]
-dev = ["pre-commit>=3.5.0"]
+dev = [
+    "pre-commit>=3.5.0",
+]
 
 [tool.pdm.scripts]
 lint = "pre-commit run --hook-stage pre-push --all-files"
@@ -29,7 +35,7 @@ lint = "pre-commit run --hook-stage pre-push --all-files"
 [tool.ruff]
 fix            = true
 force-exclude  = true
-ignore         = ["ANN401", "EM", "D203", "D212"]
+ignore         = ["ANN401", "EM", "D203", "D212", "TRY003"]
 select         = ["ALL"]
 target-version = "py312"
 

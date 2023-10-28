@@ -42,23 +42,38 @@ def blur(a):
 
 
 def sidebyside(img1, img2, **subplots_kwargs: Any):
+    """Show two images side by side."""
     fig, axs = plt.subplots(1, 2, **subplots_kwargs)
     axs[0].imshow(img1)
     axs[1].imshow(img2)
     return fig, axs
 
 
-def convolution2d(image, kernel):
-    m, n = kernel.shape
-    if m == n:
-        y, x = image.shape
-        y = y - m + 1
-        x = x - m + 1
-        new_image = np.zeros((y, x))
-        for i in range(y):
-            for j in range(x):
-                new_image[i][j] = np.sum(image[i : i + m, j : j + m] * kernel)
-    return new_image
+def convolution2d(
+    image: np.ndarray,
+    kernel: np.ndarray,
+    padding: int | None = 0,
+) -> np.ndarray:
+    """2D convolution of an image (stride is 1)."""
+    if len(image.shape) != 2:  # noqa: PLR2004
+        raise ValueError(f"Expected 2D image, got ({image.shape}).")
+    if padding is not None and padding < 0:
+        raise ValueError(f"Padding must be non-negative, got {padding}.")
+    kernel_y, kernel_x = kernel.shape
+    if kernel_y != kernel_x:
+        raise ValueError("Expected square kernels, got ({m}, {n}) kernel.")
+
+    padded_image = (
+        np.pad(image, (padding, padding), constant_values=0)
+        if padding is not None
+        else image
+    )
+    out_img = np.zeros(padded_image.shape)
+    img_y, img_x = image.shape
+    for i in range(img_y - kernel_y + 1):
+        for j in range(img_x - kernel_y + 1):
+            out_img[i][j] = np.sum(image[i : i + kernel_y, j : j + kernel_y] * kernel)
+    return out_img
 
 
 def gaussian(l=5, sig=1.0):
@@ -71,21 +86,19 @@ def gaussian(l=5, sig=1.0):
     return kernel / np.sum(kernel)
 
 
+def conv_and_show(im: np.ndarray, kernel: np.ndarray, padding: int):
+    img_gray = rgb2gray(im)
+    out_im = convolution2d(img_gray, kernel=kernel, padding=padding)
+    print(img_gray.shape, out_im.shape)
+    sidebyside(img_gray, out_im, figsize=(20, 8))
+    plt.show()
+
+
 if __name__ == "__main__":
     filepath = Path("data/pyrs.png")
     im = iio.imread(filepath)
-    # im = iio.imread(
-    #     "https://images.unsplash.com/photo-1507786288065-5886035b4d98?auto=format&fit=crop&q=80&w=2278&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    # )
-    # fig, _ = show_rgba(im, figsize=(10, 8))
-    # fig.suptitle(f"{filepath} ({'x'.join(str(d) for d in im.shape)})")
-    # plt.show()
 
-    # plt.imshow(im[200:600, 200:600, :])
-    # plt.show()
-    _np = np.array([[1.0, 2.0, 1.0], [2.0, 4.0, 2.0], [1.0, 2.0, 1.0]])
-    blur_im = convolution2d(rgb2gray(im), gaussian(5))
-    # plt.imshow(blur_im)
-
-    sidebyside(rgb2gray(im), blur_im, figsize=(20, 8))
-    plt.show()
+    kernel = np.ones((10, 10))
+    norm_kernel = kernel / np.sum(kernel)
+    padding = kernel.shape[0] // 2
+    conv_and_show(im=im, kernel=norm_kernel, padding=padding)
