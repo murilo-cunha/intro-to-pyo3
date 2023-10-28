@@ -31,4 +31,11 @@ repos:
       - id: databooks-assert
         args: ["--recipe", "seq-exec"]
       - id: databooks-meta
-        args: ["--no-rm-exec"]
+        args:
+          [
+            "--no-rm-exec",
+            "--cell-meta-keep",
+            "editable",
+            "--cell-meta-keep",
+            "slideshow",
+          ]
