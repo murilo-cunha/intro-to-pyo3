@@ -31,3 +31,4 @@ repos:
       - id: databooks-assert
         args: ["--recipe", "seq-exec"]
       - id: databooks-meta
+        args: ["--no-rm-exec"]
