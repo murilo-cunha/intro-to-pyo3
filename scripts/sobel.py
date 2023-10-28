@@ -3,6 +3,7 @@ from sobel_rs import Matrix, convolution2d
 
 
 def main() -> None:
+    """Entry point."""
     matrix = Matrix((2, 2), (1, 2, 3, 4))
     convolution2d(matrix, matrix)
     print("from python", matrix)
