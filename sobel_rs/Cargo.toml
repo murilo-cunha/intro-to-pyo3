@@ -1,0 +1,14 @@
+[package]
+edition = "2021"
+name    = "sobel_rs"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+crate-type = ["cdylib"]
+name       = "sobel_rs"
+
+[dependencies]
+anyhow  = "1.0.75"
+ndarray = "0.15.6"
+pyo3    = "0.20.0"
