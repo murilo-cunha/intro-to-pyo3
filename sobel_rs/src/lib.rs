@@ -1,31 +1,47 @@
-use ndarray::s;
+use ndarray::{s, Array2};
 use pyo3::{exceptions::PyValueError, prelude::*};
 
+/// Matrix class to pass 2D arrays between Python and Rust.
+/// `shape` defines the dimensions of the 2D matrix.
+/// `data` is a flattened 1D array of the matrix.
 #[pyclass]
 #[derive(Clone)]
 struct Matrix {
+    #[pyo3(get)]
     shape: (usize, usize),
-    data: Vec<u8>,
+    #[pyo3(get)]
+    data: Vec<f32>,
 }
 
 #[pymethods]
 impl Matrix {
     #[new]
-    fn new(shape: (usize, usize), data: Vec<u8>) -> Self {
+    fn new(shape: (usize, usize), data: Vec<f32>) -> Self {
         Matrix { shape, data }
     }
 }
 
 impl Matrix {
-    fn to_ndarray(&self) -> anyhow::Result<ndarray::Array2<u8>> {
-        ndarray::Array2::from_shape_vec(self.shape, self.data.clone())
+    /// Convert to ndarray.
+    fn to_ndarray(&self) -> anyhow::Result<Array2<f32>> {
+        Array2::from_shape_vec(self.shape, self.data.clone())
             .map_err(|_| anyhow::anyhow!("Invalid shape"))
+    }
+    /// Convert from ndarray.
+    fn from_ndarray(array: &Array2<f32>) -> Self {
+        Matrix::new(array.dim(), array.iter().map(|e| e.to_owned()).collect())
     }
 }
 
-fn pad_with_zeros(image: ndarray::Array2<u8>, padding: usize) -> ndarray::Array2<u8> {
+impl From<Array2<f32>> for Matrix {
+    fn from(array: Array2<f32>) -> Self {
+        Matrix::from_ndarray(&array)
+    }
+}
+
+fn pad_with_zeros(image: &Array2<f32>, padding: usize) -> Array2<f32> {
     let (y, x) = image.dim();
-    let mut padded_image = ndarray::Array2::zeros((y + 2 * padding, x + 2 * padding));
+    let mut padded_image = Array2::zeros((y + 2 * padding, x + 2 * padding));
     padded_image
         .slice_mut(s![padding..y + padding, padding..x + padding])
         .assign(&image);
@@ -43,9 +59,12 @@ fn sobel_rs(_py: Python, m: &PyModule) -> PyResult<()> {
 
     /// 2D convolution of an image (stride is 1).
     #[pyfn(m)]
-    fn convolution2d(image: Matrix, kernel: Matrix, padding: Option<u8>) -> PyResult<()> {
-        let arr = image.to_ndarray().map_err(|e| {
-            PyValueError::new_err("Rust error: ".to_owned() + &e.to_string().to_owned())
+    fn convolution2d(image: Matrix, kernel: Matrix, padding: Option<f32>) -> PyResult<Matrix> {
+        // Convert to ndarray
+        let img = image.to_ndarray().map_err(|e| {
+            PyValueError::new_err(
+                "Error converting `Matrix` to `Array2`: ".to_owned() + &e.to_string().to_owned(),
+            )
         })?;
         println!("from rust {arr:?}");
         Ok(())
@@ -70,6 +89,6 @@ mod tests {
             [0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0],
         ]);
-        assert_eq!(pad_with_zeros(input_img, 2), expected_img);
+        assert_eq!(pad_with_zeros(&input_img, 2), expected_img);
     }
 }
