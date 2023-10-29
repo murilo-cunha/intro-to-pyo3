@@ -15,12 +15,13 @@ cd intro-to-pyo3
 
 If you are on VSCode and don't have Rust installed and/or Python 3.12 installed, dev containers is a good option. Just open the project folder in VSCode and click on the green button at the bottom left corner of the screen. Make sure that the Docker daemon is running.
 
+### Virtual Environment and dependencies
+
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
-
 
 ### PDM
 
@@ -30,3 +31,7 @@ If you are using [PDM](https://pdm.fming.dev/latest/), make sure to include `pip
 pdm install
 pdm run python -m ensurepip
 ```
+
+## The exercise
+
+If you'd like to follow the workshop self paced, start with the introduction presentation on the [notebook](https://github.com/murilo-cunha/intro-to-pyo3/blob/main/notebooks/intro.ipynb). It explains the setup and the exercise. Good luck!
